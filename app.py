@@ -6,8 +6,11 @@ import pandas as pd
 import pickle
 from joblib import load
 
+#from tensorflow.keras.models import load_model
+#model = load_model("model.keras")
+
 from tensorflow.keras.models import load_model
-model = load_model("model.keras")
+model = load_model("model.h5")
 
 
 # Load the encoders and scaler
