@@ -26,14 +26,69 @@ with open('scaler.joblib', 'rb') as file:
 ## Streamlit App
 st.title('Extrovert/Introvert prediction')
 
-# User input
-time_spent_Alone = st.slider('Time_spent_Alone', 0, 12)
-stage_fear = st.selectbox('Stage_fear', ["Yes", "No"])
-social_event_attendance  = st.slider('Social_event_attendance', 0, 12)
-going_outside = st.slider('Going_outside', 0, 8)
-drained_after_socializing = st.selectbox('Drained_after_socializing', ["Yes", "No"])
-friends_circle_size = st.number_input('Friends_circle_size', 0, step = 1)
-post_frequency = st.slider('Post_frequency', 0, 10)
+# Initialize session state
+defaults = {
+    "time_spent_Alone": 0,
+    "social_event_attendance": 0,
+    "going_outside": 0
+}
+
+for key, value in defaults.items():
+    if key not in st.session_state:
+        st.session_state[key] = value
+
+# --- Sliders with dependency and reset ---
+# Base slider
+time_asleep = st.slider('Hours asleep per day', 0, 24, key="time_asleep")
+
+# time_spent_Alone
+max_alone = max(0, 24 - time_asleep)
+if max_alone > 0:
+    if st.session_state.time_spent_Alone > max_alone:
+        st.session_state.time_spent_Alone = 0
+    time_spent_Alone = st.slider(
+        'Hours spent alone per day (not counting sleep)',
+        0, max_alone, st.session_state.time_spent_Alone,
+        key="time_spent_Alone"
+    )
+else:
+    time_spent_Alone = 0
+    st.warning("Not enough awake time. Adjust previous slider.")
+
+# social_event_attendance
+max_social = max(0, 24 - time_asleep - time_spent_Alone)
+if max_social > 0:
+    if st.session_state.social_event_attendance > max_social:
+        st.session_state.social_event_attendance = 0
+    social_event_attendance = st.slider(
+        "Hours spent in social events per day",
+        0, max_social, st.session_state.social_event_attendance,
+        key="social_event_attendance"
+    )
+else:
+    social_event_attendance = 0
+    st.warning("You have no time left in the day for social events.")
+
+
+# going_outside
+max_outside = max(0, 24 - time_asleep)
+if max_outside > 0:
+    if st.session_state.going_outside > max_outside:
+        st.session_state.going_outside = 0
+    going_outside = st.slider(
+        "Hours spent outside per day",
+        0, max_outside, st.session_state.going_outside,
+        key="going_outside"
+    )
+else:
+    going_outside = 0
+    st.warning("You have no time left in the day for going outside.")
+
+# Other inputs
+stage_fear = st.selectbox('Has stage fear?', ["Yes", "No"])
+drained_after_socializing = st.selectbox('Is drained after socializing?', ["Yes", "No"])
+friends_circle_size = st.number_input('Number of close friends', 0, step=1)
+post_frequency = st.slider("Post Frequency", 0, 10)
 
 # Prepare the input data
 input_data = pd.DataFrame({
@@ -46,7 +101,6 @@ input_data = pd.DataFrame({
     'Post_frequency': [post_frequency],
 })
 
-
 # Scale the input data
 input_data_scaled = scaler.transform(input_data)
 
@@ -54,10 +108,9 @@ input_data_scaled = scaler.transform(input_data)
 prediction = model.predict(input_data_scaled)
 prediction_proba = prediction[0][0]
 
-#st.write(f'Extrovert Probability: {prediction_proba:.2f}')
+st.write(f'Extrovert Probability: {prediction_proba:.2f}')
 
-st.write(prediction[0])
 if prediction_proba > 0.5:
-    st.write('The customer is likely to be an extrovert.')
+    st.write('The person is more likely to be an extrovert.')
 else:
-    st.write('The customer is likely to be an introvert.')
+    st.write('The person is more likely to be an introvert.')
