@@ -50,10 +50,10 @@ input_data_scaled = scaler.transform(input_data)
 prediction = model.predict(input_data_scaled)
 prediction_proba = prediction[0][0]
 
-st.write(f'Extrovert Probability: {prediction_proba:.2f}')
+#st.write(f'Extrovert Probability: {prediction_proba:.2f}')
 
-
+st.write(prediction[0])
 if prediction_proba > 0.5:
-    print('The customer is likely to be an extrovert.')
+    st.write('The customer is likely to be an extrovert.')
 else:
-    print('The customer is likely to be an introvert.')
+    st.write('The customer is likely to be an introvert.')
