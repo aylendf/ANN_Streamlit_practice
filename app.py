@@ -24,10 +24,10 @@ st.title('Extrovert/Introvert prediction')
 
 # User input
 time_spent_Alone = st.slider('Time_spent_Alone', 0, 12)
-stage_fear = st.selectbox('Stage_fear', label_encoder_stage.categories_[0])
+stage_fear = st.selectbox('Stage_fear', ["Yes", "No"])
 social_event_attendance  = st.slider('Social_event_attendance', 0, 12)
 going_outside = st.slider('Going_outside', 0, 8)
-drained_after_socializing = st.selectbox('Drained_after_socializing', label_encoder_drained.categories_[0])
+drained_after_socializing = st.selectbox('Drained_after_socializing', ["Yes", "No"])
 friends_circle_size = st.number_input('Friends_circle_size')
 post_frequency = st.slider('Post_frequency', 0, 10)
 
