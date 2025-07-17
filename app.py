@@ -32,7 +32,7 @@ stage_fear = st.selectbox('Stage_fear', ["Yes", "No"])
 social_event_attendance  = st.slider('Social_event_attendance', 0, 12)
 going_outside = st.slider('Going_outside', 0, 8)
 drained_after_socializing = st.selectbox('Drained_after_socializing', ["Yes", "No"])
-friends_circle_size = st.number_input('Friends_circle_size')
+friends_circle_size = st.number_input('Friends_circle_size', 0, step = 1)
 post_frequency = st.slider('Post_frequency', 0, 10)
 
 # Prepare the input data
