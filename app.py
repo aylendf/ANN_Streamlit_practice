@@ -6,8 +6,8 @@ import pandas as pd
 import pickle
 from joblib import load
 
-# Load the trained model
-model = tf.keras.models.load_model("model.keras")
+from tensorflow.keras.models import load_model
+model = load_model("model.keras")
 
 
 # Load the encoders and scaler
